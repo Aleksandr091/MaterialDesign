@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.chistov.materialdesign">
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,7 @@
         android:theme="@style/Theme.MaterialDesign"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="ru.chistov.materialdesign.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
