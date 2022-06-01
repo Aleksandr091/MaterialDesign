@@ -6,7 +6,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLayout"
-        android:layout_width="2dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_wiki"
         app:counterEnabled="true"
@@ -37,6 +37,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputLayout"
         app:srcCompat="@drawable/ic_no_photo_vector" />
+
+    <include android:id="@+id/lifeHack" layout="@layout/bottom_sheet_layout"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="90dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yesterday" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TDBY" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="?colorPrimary"
+        app:fabAlignmentMode="center"
+        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?colorSecondary"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:srcCompat="@drawable/ic_plus_fab" />
 
 
 

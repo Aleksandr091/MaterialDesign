@@ -1,34 +1,62 @@
 package ru.chistov.materialdesign.view.pictures
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
+import ru.chistov.materialdesign.view.MainActivity
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayAppState
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayViewModel
 
 
 class PicturesOfTheDayFragment : Fragment() {
 
-    private var _binding:FragmentPicturesOfTheDayBinding?=null
-    private val binding:FragmentPicturesOfTheDayBinding
-    get() = _binding!!
+    var isMain = true
+
+    private var _binding: FragmentPicturesOfTheDayBinding? = null
+    private val binding: FragmentPicturesOfTheDayBinding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPicturesOfTheDayBinding.inflate(inflater,container,false)
+        _binding = FragmentPicturesOfTheDayBinding.inflate(inflater, container, false)
         return binding.root
     }
-    private val viewModel:PicturesOfTheDayViewModel by lazy{
+
+    private val viewModel: PicturesOfTheDayViewModel by lazy {
         ViewModelProvider(this).get(PicturesOfTheDayViewModel::class.java)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_fav -> {}
+            R.id.app_bar_settings -> {}
+            android.R.id.home -> {
+                BottomNavigationDrawerFragment.newInstance()
+                    .show(requireActivity().supportFragmentManager, "")
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,14 +65,71 @@ class PicturesOfTheDayFragment : Fragment() {
             renderData(it)
         })
         viewModel.sendRequest()
+        setClickListenerTextInputLayout()
+        initBottomSheetBehavior()
+        initMenu()
+
+        binding.fab.setOnClickListener {
+            if(isMain){
+                binding.bottomAppBar.navigationIcon=null
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                binding.fab.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_back_fab))
+                //binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+            }else{
+                binding.bottomAppBar.navigationIcon=ContextCompat.getDrawable(requireContext(),R.drawable.ic_hamburger_menu_bottom_bar)
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                binding.fab.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_plus_fab))
+                //binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+            }
+            isMain=!isMain
+        }
+        binding.chipGroup.setOnCheckedChangeListener { group, position ->
+
+             /*when(position){
+                1->{viewModel.sendRequestToday()}
+                2->{viewModel.sendRequestYT()}
+                3->{viewModel.sendRequestTDBY()}
+            }
+            when(position){
+                1->{viewModel.sendRequest(date)}
+                2->{viewModel.sendRequest(date-1)}
+                3->{viewModel.sendRequest(date-2)}
+            }*/
+            group.findViewById<Chip>(position)?.let{
+                Log.d("@@@", "${it.text.toString()} $position")
+            }
+        }
     }
 
-    private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState){
-        when(picturesOfTheDayAppState){
+    private fun initBottomSheetBehavior() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.lifeHack.bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    }
+
+    private fun setClickListenerTextInputLayout() {
+        binding.inputLayout.setEndIconOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW).apply {
+                data =
+                    Uri.parse("https://en.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
+            })
+        }
+    }
+
+    private fun initMenu() {
+        (requireActivity() as MainActivity).setSupportActionBar(binding.bottomAppBar)
+        setHasOptionsMenu(true)
+    }
+
+    private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
+        when (picturesOfTheDayAppState) {
             is PicturesOfTheDayAppState.Error -> {}
             is PicturesOfTheDayAppState.Loading -> {}
             is PicturesOfTheDayAppState.Success -> {
                 binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.url)
+                binding.lifeHack.title.text =
+                    picturesOfTheDayAppState.pictureOfTheDayResponseData.title
+                binding.lifeHack.explanation.text =
+                    picturesOfTheDayAppState.pictureOfTheDayResponseData.explanation
             }
         }
     }
