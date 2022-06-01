@@ -23,7 +23,7 @@
             android:id="@+id/input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ru.chistov.materialdesign.utils.EquilateralImageView

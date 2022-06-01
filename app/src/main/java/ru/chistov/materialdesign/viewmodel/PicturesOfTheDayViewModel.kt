@@ -7,14 +7,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.chistov.materialdesign.BuildConfig
+import ru.chistov.materialdesign.repositiry.*
 
-import ru.chistov.materialdesign.repositiry.PictureOfTheDayResponseData
-import ru.chistov.materialdesign.repositiry.PictureOfTheDayRetrofit2Impl
 import ru.chistov.materialdesign.repositiry.PictureOfTheDayRetrofit2Impl.Companion.getRetrofit
 
 class PicturesOfTheDayViewModel(
     private val liveData: MutableLiveData<PicturesOfTheDayAppState> = MutableLiveData(),
-    private val pictureOfTheDayRetrofit2Impl: PictureOfTheDayRetrofit2Impl = PictureOfTheDayRetrofit2Impl()
+    private val repository: Repository = PictureOfTheDayRetrofit2Impl()
 ) : ViewModel() {
 
     fun getLiveData(): LiveData<PicturesOfTheDayAppState> {
@@ -23,10 +22,19 @@ class PicturesOfTheDayViewModel(
 
     fun sendRequest(){
         liveData.postValue(PicturesOfTheDayAppState.Loading(null))
-        getRetrofit().getPicturesOfTheDay(BuildConfig.NASA_API_KEY).enqueue(callback)
+        repository.getPicture(object : MyCallback{
+            override fun onFailure(error: String) {
+                liveData.postValue(PicturesOfTheDayAppState.Error(error))
+            }
+
+            override fun onResponse(picture: PictureOfTheDayResponseData) {
+                liveData.postValue(PicturesOfTheDayAppState.Success(picture))
+            }
+
+        })
     }
 
-    private val callback = object : Callback<PictureOfTheDayResponseData>{
+    /*private val callback = object : Callback<PictureOfTheDayResponseData>{
         override fun onResponse(
             call: Call<PictureOfTheDayResponseData>,
             response: Response<PictureOfTheDayResponseData>
@@ -43,5 +51,5 @@ class PicturesOfTheDayViewModel(
             TODO("Not yet implemented")
         }
 
-    }
+    }*/
 }
