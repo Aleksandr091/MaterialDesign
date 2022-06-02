@@ -3,9 +3,6 @@ package ru.chistov.materialdesign.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.chistov.materialdesign.BuildConfig
 import ru.chistov.materialdesign.repositiry.*
 
@@ -20,15 +17,16 @@ class PicturesOfTheDayViewModel(
         return liveData
     }
 
-    fun sendRequest(){
+    fun sendRequest(date: String){
         liveData.postValue(PicturesOfTheDayAppState.Loading(null))
-        repository.getPicture(object : MyCallback{
-            override fun onFailure(error: String) {
-                liveData.postValue(PicturesOfTheDayAppState.Error(error))
+        repository.getPicture(date,object : MyCallback{
+            override fun onFailure(error: Throwable?,message:String?) {
+                liveData.postValue(error?.let { PicturesOfTheDayAppState.Error(it,null)})
+                liveData.postValue(message?.let { PicturesOfTheDayAppState.Error(null,it)})
             }
 
-            override fun onResponse(picture: PictureOfTheDayResponseData) {
-                liveData.postValue(PicturesOfTheDayAppState.Success(picture))
+            override fun onResponse(response: PictureOfTheDayResponseData) {
+                liveData.postValue(PicturesOfTheDayAppState.Success(response))
             }
 
         })

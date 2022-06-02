@@ -1,7 +1,11 @@
 package ru.chistov.materialdesign.repositiry
 
 
+import android.annotation.SuppressLint
 import android.app.Application
+
+import android.util.Log
+
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -10,6 +14,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.chistov.materialdesign.BuildConfig
 import ru.chistov.materialdesign.utils.DOMAIN
+import java.text.SimpleDateFormat
+
+import java.util.*
 
 class PictureOfTheDayRetrofit2Impl : Application(), Repository {
 
@@ -32,8 +39,10 @@ class PictureOfTheDayRetrofit2Impl : Application(), Repository {
         }
     }
 
-    override fun getPicture(myCallback: MyCallback) {
-        getRetrofit().getPicturesOfTheDay(BuildConfig.NASA_API_KEY)
+    @SuppressLint("SimpleDateFormat")
+    override fun getPicture(date: String,myCallback: MyCallback) {
+
+        getRetrofit().getPicturesOfTheDay(date,BuildConfig.NASA_API_KEY)
             .enqueue(object : Callback<PictureOfTheDayResponseData> {
                 override fun onResponse(
                     call: Call<PictureOfTheDayResponseData>,
@@ -43,15 +52,16 @@ class PictureOfTheDayRetrofit2Impl : Application(), Repository {
                         response.body()?.let { myCallback.onResponse(it) }
 
                     } else {
-                        myCallback.onFailure("${response.message()}${response.code()}")
+                        myCallback.onFailure(null,"${response.message()}${response.code()}")
                     }
                 }
 
                 override fun onFailure(call: Call<PictureOfTheDayResponseData>, t: Throwable) {
-                    myCallback.onFailure("Что-то пошло не так" + t.message)
+                    myCallback.onFailure(t,null)
                 }
 
             })
+
 
 
     }

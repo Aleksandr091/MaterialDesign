@@ -19,11 +19,15 @@ import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
 import ru.chistov.materialdesign.view.MainActivity
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayAppState
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class PicturesOfTheDayFragment : Fragment() {
 
     var isMain = true
+    private val dateFormatted = SimpleDateFormat("yyyy-MM-dd")
+
 
     private var _binding: FragmentPicturesOfTheDayBinding? = null
     private val binding: FragmentPicturesOfTheDayBinding
@@ -59,12 +63,14 @@ class PicturesOfTheDayFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer {
             renderData(it)
         })
-        viewModel.sendRequest()
+        val date = dateFormatted.format(Calendar.getInstance().time)
+        viewModel.sendRequest(date)
         setClickListenerTextInputLayout()
         initBottomSheetBehavior()
         initMenu()
@@ -85,16 +91,14 @@ class PicturesOfTheDayFragment : Fragment() {
         }
         binding.chipGroup.setOnCheckedChangeListener { group, position ->
 
-             /*when(position){
-                1->{viewModel.sendRequestToday()}
-                2->{viewModel.sendRequestYT()}
-                3->{viewModel.sendRequestTDBY()}
-            }
+            val dateYT = dateFormatted.format(System.currentTimeMillis()-100000000)
+            val dateTDBY = dateFormatted.format(System.currentTimeMillis()-200000000)
+
             when(position){
                 1->{viewModel.sendRequest(date)}
-                2->{viewModel.sendRequest(date-1)}
-                3->{viewModel.sendRequest(date-2)}
-            }*/
+                2->{viewModel.sendRequest(dateYT)}
+                3->{viewModel.sendRequest(dateTDBY)}
+            }
             group.findViewById<Chip>(position)?.let{
                 Log.d("@@@", "${it.text.toString()} $position")
             }
