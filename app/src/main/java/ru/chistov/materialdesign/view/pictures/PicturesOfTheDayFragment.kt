@@ -3,7 +3,6 @@ package ru.chistov.materialdesign.view.pictures
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -11,9 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
 import ru.chistov.materialdesign.view.MainActivity
@@ -76,31 +74,48 @@ class PicturesOfTheDayFragment : Fragment() {
         initMenu()
 
         binding.fab.setOnClickListener {
-            if(isMain){
-                binding.bottomAppBar.navigationIcon=null
+            if (isMain) {
+                binding.bottomAppBar.navigationIcon = null
                 binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                binding.fab.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_back_fab))
-                //binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
-            }else{
-                binding.bottomAppBar.navigationIcon=ContextCompat.getDrawable(requireContext(),R.drawable.ic_hamburger_menu_bottom_bar)
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_back_fab
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.menu_about)
+            } else {
+                binding.bottomAppBar.navigationIcon = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_hamburger_menu_bottom_bar
+                )
                 binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                binding.fab.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_plus_fab))
-                //binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+                binding.fab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_plus_fab
+                    )
+                )
+                binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
             }
-            isMain=!isMain
+            isMain = !isMain
         }
-        binding.chipGroup.setOnCheckedChangeListener { group, position ->
+        binding.chipGroup.setOnCheckedChangeListener { _, position ->
 
-            val dateYT = dateFormatted.format(System.currentTimeMillis()-100000000)
-            val dateTDBY = dateFormatted.format(System.currentTimeMillis()-200000000)
+            val dateYT =
+                dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
+            val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
 
-            when(position){
-                1->{viewModel.sendRequest(date)}
-                2->{viewModel.sendRequest(dateYT)}
-                3->{viewModel.sendRequest(dateTDBY)}
-            }
-            group.findViewById<Chip>(position)?.let{
-                Log.d("@@@", "${it.text.toString()} $position")
+            when (position) {
+                1 -> {
+                    viewModel.sendRequest(date)
+                }
+                2 -> {
+                    viewModel.sendRequest(dateYT)
+                }
+                3 -> {
+                    viewModel.sendRequest(dateTDBY)
+                }
             }
         }
     }
@@ -126,10 +141,20 @@ class PicturesOfTheDayFragment : Fragment() {
 
     private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
         when (picturesOfTheDayAppState) {
-            is PicturesOfTheDayAppState.Error -> {}
+            is PicturesOfTheDayAppState.Error -> {
+                Snackbar.make(
+                    requireContext(),
+                    binding.root,
+                    picturesOfTheDayAppState.message,
+                    Snackbar.LENGTH_LONG
+                ).show()
+
+            }
             is PicturesOfTheDayAppState.Loading -> {}
             is PicturesOfTheDayAppState.Success -> {
-                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.url)
+                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.url) {
+
+                }
                 binding.lifeHack.title.text =
                     picturesOfTheDayAppState.pictureOfTheDayResponseData.title
                 binding.lifeHack.explanation.text =

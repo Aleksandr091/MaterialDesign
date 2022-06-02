@@ -31,10 +31,13 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
             when(it.itemId){
                 R.id.navigation_one ->{
                     Log.d("@@@","На экран 1")
+                    dismiss()
                 }
                 R.id.navigation_two ->{
                     Log.d("@@@","На экран 2")
+                    dismiss()
                 }
+
             }
             true
         }

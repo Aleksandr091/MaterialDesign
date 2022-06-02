@@ -52,12 +52,12 @@ class PictureOfTheDayRetrofit2Impl : Application(), Repository {
                         response.body()?.let { myCallback.onResponse(it) }
 
                     } else {
-                        myCallback.onFailure(null,"${response.message()}${response.code()}")
+                        myCallback.onFailure("${response.message()}${response.code()}")
                     }
                 }
 
                 override fun onFailure(call: Call<PictureOfTheDayResponseData>, t: Throwable) {
-                    myCallback.onFailure(t,null)
+                    myCallback.onFailure(t.message.toString())
                 }
 
             })
