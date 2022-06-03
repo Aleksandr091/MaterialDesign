@@ -1,9 +1,11 @@
 package ru.chistov.materialdesign.view.pictures
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.constraintlayout.widget.Placeholder
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -102,8 +104,7 @@ class PicturesOfTheDayFragment : Fragment() {
         }
         binding.chipGroup.setOnCheckedChangeListener { _, position ->
 
-            val dateYT =
-                dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
+            val dateYT = dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
             val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
 
             when (position) {
@@ -139,9 +140,13 @@ class PicturesOfTheDayFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
+
+
+
     private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
         when (picturesOfTheDayAppState) {
             is PicturesOfTheDayAppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
                 Snackbar.make(
                     requireContext(),
                     binding.root,
@@ -150,11 +155,12 @@ class PicturesOfTheDayFragment : Fragment() {
                 ).show()
 
             }
-            is PicturesOfTheDayAppState.Loading -> {}
+            is PicturesOfTheDayAppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+            }
             is PicturesOfTheDayAppState.Success -> {
-                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.url) {
-
-                }
+                binding.loadingLayout.visibility = View.GONE
+                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.hdurl) { this.placeholder(R.drawable.kos) }
                 binding.lifeHack.title.text =
                     picturesOfTheDayAppState.pictureOfTheDayResponseData.title
                 binding.lifeHack.explanation.text =

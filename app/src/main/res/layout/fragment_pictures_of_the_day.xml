@@ -25,21 +25,6 @@
             android:layout_height="wrap_content"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <ru.chistov.materialdesign.utils.EquilateralImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/photo_of_the_day_stub"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputLayout"
-        app:srcCompat="@drawable/ic_no_photo_vector" />
-
-    <include android:id="@+id/lifeHack" layout="@layout/bottom_sheet_layout"/>
-
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="wrap_content"
@@ -63,6 +48,36 @@
             android:layout_height="wrap_content"
             android:text="TDBY" />
     </com.google.android.material.chip.ChipGroup>
+    <FrameLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <ru.chistov.materialdesign.utils.EquilateralImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/photo_of_the_day_stub"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputLayout"
+        app:srcCompat="@drawable/ic_no_photo_vector" />
+
+    <include android:id="@+id/lifeHack" layout="@layout/bottom_sheet_layout"/>
+
+
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -80,6 +95,7 @@
         android:backgroundTint="?colorSecondary"
         app:layout_anchor="@id/bottom_app_bar"
         app:srcCompat="@drawable/ic_plus_fab" />
+
 
 
 
