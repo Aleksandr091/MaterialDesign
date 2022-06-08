@@ -39,8 +39,6 @@
         <item name="floatingActionButtonStyle">@style/MyStyleFloatingActionButton</item>
         <item name="chipStyle">@style/MyChipStyle</item>
         <item name="tabStyle">@style/MyTabStyle</item>
-        <item name="shapeAppearanceSmallComponent">@style/MySmallShape</item>
-
 
 
 
