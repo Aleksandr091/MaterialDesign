@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.constraintlayout.widget.Placeholder
 import androidx.core.content.ContextCompat
@@ -13,10 +14,17 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
+import ru.chistov.materialdesign.utils.ThemeBlueTheme
+import ru.chistov.materialdesign.utils.ThemeGreenTheme
+import ru.chistov.materialdesign.utils.ThemeMaterialDesign
+import ru.chistov.materialdesign.utils.ThemeRedTheme
 import ru.chistov.materialdesign.view.MainActivity
+import ru.chistov.materialdesign.view.settings.SettingsFragment
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayAppState
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayViewModel
 import java.text.SimpleDateFormat
@@ -53,7 +61,9 @@ class PicturesOfTheDayFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.app_bar_fav -> {}
-            R.id.app_bar_settings -> {}
+            R.id.app_bar_settings -> {
+                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container,SettingsFragment.newInstance()).addToBackStack("").commit()
+            }
             android.R.id.home -> {
                 BottomNavigationDrawerFragment.newInstance()
                     .show(requireActivity().supportFragmentManager, "")
@@ -102,7 +112,35 @@ class PicturesOfTheDayFragment : Fragment() {
             }
             isMain = !isMain
         }
-        binding.chipGroup.setOnCheckedChangeListener { _, position ->
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val dateYT = dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
+                val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
+                when(tab?.position){
+
+                    0 ->  {
+                        viewModel.sendRequest(date)}
+                    1 ->  {
+
+                        viewModel.sendRequest(dateYT)}
+                    2 ->  {
+
+                        viewModel.sendRequest(dateTDBY)}
+
+                }
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+        /*binding.chipGroup.setOnCheckedChangeListener { group, position ->
 
             val dateYT = dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
             val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
@@ -118,7 +156,11 @@ class PicturesOfTheDayFragment : Fragment() {
                     viewModel.sendRequest(dateTDBY)
                 }
             }
-        }
+            group.findViewById<Chip>(position)?.let{
+                Log.d("@@@", "${it.text.toString()} $position")
+            }
+        }*/
+
     }
 
     private fun initBottomSheetBehavior() {
@@ -146,7 +188,6 @@ class PicturesOfTheDayFragment : Fragment() {
     private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
         when (picturesOfTheDayAppState) {
             is PicturesOfTheDayAppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
                 Snackbar.make(
                     requireContext(),
                     binding.root,
@@ -156,11 +197,14 @@ class PicturesOfTheDayFragment : Fragment() {
 
             }
             is PicturesOfTheDayAppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
+                binding.imageView.load(R.drawable.progress_animation) {
+                    error(R.drawable.ic_vector_load_error)
+                }
             }
             is PicturesOfTheDayAppState.Success -> {
-                binding.loadingLayout.visibility = View.GONE
-                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.hdurl) { this.placeholder(R.drawable.kos) }
+                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.hdurl) { this.placeholder(R.drawable.progress_animation)
+                    crossfade(true)
+                    error(R.drawable.ic_vector_load_error)}
                 binding.lifeHack.title.text =
                     picturesOfTheDayAppState.pictureOfTheDayResponseData.title
                 binding.lifeHack.explanation.text =

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="today">сегодня</string>
+    <string name="yesterday">вчера</string>
+    <string name="tdby">позавчера</string>
+    <string name="stok">сток</string>
+    <string name="red">красная</string>
+    <string name="green">зеленая</string>
+    <string name="blue">голубая</string>
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textAppearance">@style/MyTextAppearance</item>
+    </style>
+
+    <style name="MyTabStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextAppearance">@style/TextAppearanceTab</item>
+    </style>
+
+
+    <style name="MyStyleFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="MyStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">#034AFF</item>
+        <item name="helperTextEnabled">false</item>
+        <item name="counterEnabled">false</item>
+        <item name="errorTextColor">#034AFF</item>
+
+    </style>
+
+    <style name="MyTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/gost</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearanceTab" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/gost</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MySmallShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">50%</item>
+        <item name="cornerSizeTopLeft">10%</item>
+        <item name="cornerSizeTopRight">10%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+
+</resources>

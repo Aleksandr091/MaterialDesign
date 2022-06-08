@@ -16,4 +16,10 @@
     <color name="red_700">#D72A2A</color>
     <color name="red_800">#C82424</color>
     <color name="red_900">#AE0B0B</color>
+
+
+    <color name="red">#AE0B0B</color>
+    <color name="green">#66EF12</color>
+    <color name="blue">#10B0F4</color>
+    <color name="ripple_color">#FFD405</color>
 </resources>

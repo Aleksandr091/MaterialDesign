@@ -15,6 +15,48 @@
         <item name="chipStyle">@style/MyChipStyle</item>
     </style>
 
-    <style name="MyChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+    <style name="MyBaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="android:navigationBarColor">?superColor</item>
+        <item name="colorPrimary">?superColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">?superColor</item>
+        <item name="colorOnPrimaryContainer">?superColor</item>
+        <item name="colorPrimaryInverse">?superColor</item>
+        <item name="colorSecondary">?superColor</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">?superColor</item>
+        <item name="colorOnSecondaryContainer">?superColor</item>
+        <item name="colorTertiary">?superColor</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorTertiaryContainer">?superColor</item>
+        <item name="colorOnTertiaryContainer">?superColor</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="textInputStyle">@style/MyStyle</item>
+        <item name="floatingActionButtonStyle">@style/MyStyleFloatingActionButton</item>
+        <item name="chipStyle">@style/MyChipStyle</item>
+        <item name="tabStyle">@style/MyTabStyle</item>
+        <item name="shapeAppearanceSmallComponent">@style/MySmallShape</item>
+
+
+
+
     </style>
+
+    <style name="MyRedTheme" parent="MyBaseTheme">
+        <item name="superColor">@color/red</item>
+    </style>
+
+    <style name="MyGreenTheme" parent="MyBaseTheme">
+        <item name="superColor">@color/green</item>
+    </style>
+
+    <style name="MyBlueTheme" parent="MyBaseTheme">
+        <item name="superColor">@color/blue</item>
+    </style>
+
+
 </resources>

@@ -3,10 +3,9 @@ package ru.chistov.materialdesign.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.chistov.materialdesign.BuildConfig
 import ru.chistov.materialdesign.repositiry.*
 
-import ru.chistov.materialdesign.repositiry.PictureOfTheDayRetrofit2Impl.Companion.getRetrofit
+
 
 class PicturesOfTheDayViewModel(
     private val liveData: MutableLiveData<PicturesOfTheDayAppState> = MutableLiveData(),
@@ -24,8 +23,8 @@ class PicturesOfTheDayViewModel(
                 liveData.postValue(PicturesOfTheDayAppState.Error(message))
             }
 
-            override fun onResponse(response: PictureOfTheDayResponseData) {
-                liveData.postValue(PicturesOfTheDayAppState.Success(response))
+            override fun onResponse(picture: PictureOfTheDayResponseData) {
+                liveData.postValue(PicturesOfTheDayAppState.Success(picture))
             }
 
         })
