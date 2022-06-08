@@ -84,7 +84,48 @@ class PicturesOfTheDayFragment : Fragment() {
         setClickListenerTextInputLayout()
         initBottomSheetBehavior()
         initMenu()
+        fabListener()
+        tabListener(date)
 
+
+    }
+
+    private fun tabListener(date: String) {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val dateYT =
+                    dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
+                val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
+                when (tab?.position) {
+
+                    0 -> {
+                        viewModel.sendRequest(date)
+                    }
+                    1 -> {
+
+                        viewModel.sendRequest(dateYT)
+                    }
+                    2 -> {
+
+                        viewModel.sendRequest(dateTDBY)
+                    }
+
+                }
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+    }
+
+    private fun fabListener() {
         binding.fab.setOnClickListener {
             if (isMain) {
                 binding.bottomAppBar.navigationIcon = null
@@ -112,55 +153,6 @@ class PicturesOfTheDayFragment : Fragment() {
             }
             isMain = !isMain
         }
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val dateYT = dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
-                val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
-                when(tab?.position){
-
-                    0 ->  {
-                        viewModel.sendRequest(date)}
-                    1 ->  {
-
-                        viewModel.sendRequest(dateYT)}
-                    2 ->  {
-
-                        viewModel.sendRequest(dateTDBY)}
-
-                }
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
-        })
-        /*binding.chipGroup.setOnCheckedChangeListener { group, position ->
-
-            val dateYT = dateFormatted.format(System.currentTimeMillis() - 86400000)// сутки=86400000 м.с
-            val dateTDBY = dateFormatted.format(System.currentTimeMillis() - 86400000 * 2)
-
-            when (position) {
-                1 -> {
-                    viewModel.sendRequest(date)
-                }
-                2 -> {
-                    viewModel.sendRequest(dateYT)
-                }
-                3 -> {
-                    viewModel.sendRequest(dateTDBY)
-                }
-            }
-            group.findViewById<Chip>(position)?.let{
-                Log.d("@@@", "${it.text.toString()} $position")
-            }
-        }*/
-
     }
 
     private fun initBottomSheetBehavior() {

@@ -1,16 +1,13 @@
 package ru.chistov.materialdesign.view.settings
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
@@ -52,15 +49,14 @@ class SettingsFragment : Fragment() {
     }
 
 
-    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initTabLayout()
-
         chipClick()
+        tabListener()
+    }
 
-
-
+    private fun tabListener() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
@@ -107,9 +103,10 @@ class SettingsFragment : Fragment() {
         })
     }
 
-    @SuppressLint("ResourceType")
+
     private fun chipClick() {
 
+        //не получается подсветить чипы после recreate()
         binding.chipGroup.setOnCheckedChangeListener { group, position ->
             val chip = group.findViewById<Chip>(position)
             val tag = chip.tag
