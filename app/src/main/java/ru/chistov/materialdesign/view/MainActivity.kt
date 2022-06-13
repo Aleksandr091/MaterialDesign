@@ -7,6 +7,7 @@ import ru.chistov.materialdesign.utils.ThemeBlueTheme
 import ru.chistov.materialdesign.utils.ThemeGreenTheme
 import ru.chistov.materialdesign.utils.ThemeMaterialDesign
 import ru.chistov.materialdesign.utils.ThemeRedTheme
+import ru.chistov.materialdesign.view.navigation.viewpager.ApiFragment
 import ru.chistov.materialdesign.view.pictures.PicturesOfTheDayFragment
 import ru.chistov.materialdesign.view.settings.SettingsFragment
 
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setTheme(getRealStyle(getCurrentTheme()))
         setContentView(R.layout.activity_main)
         if (savedInstanceState==null){
-            supportFragmentManager.beginTransaction().replace(R.id.container,PicturesOfTheDayFragment.newInstance()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.container,ApiFragment.newInstance()).commit()
         }
     }
     fun getCurrentTheme(): Int {
