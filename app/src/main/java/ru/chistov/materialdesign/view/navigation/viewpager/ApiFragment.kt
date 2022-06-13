@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentApiBinding
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
@@ -28,7 +30,16 @@ class ApiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewPager.adapter = ViewPagerAdapter(this)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        TabLayoutMediator(binding.tabLayout,binding.viewPager,object :TabLayoutMediator.TabConfigurationStrategy{
+            override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
+                //TDDO HW настраиваем tab
+                tab.text = when(position){
+                    0-> "Earth"
+                    1-> "System"
+                    else -> "Mars"
+                }
+            }
+        } ).attach()
 
     }
 

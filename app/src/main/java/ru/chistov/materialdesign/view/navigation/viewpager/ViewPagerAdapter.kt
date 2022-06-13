@@ -22,12 +22,6 @@ class ViewPagerAdapter(fa: Fragment) : FragmentStateAdapter(fa) {
     }
 
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return when(position){
-            0-> "Earth"
-            1-> "System"
-            else -> "Mars"
-        }
-    }
+
 
 }
