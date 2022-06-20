@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayout
@@ -106,7 +105,6 @@ class SettingsFragment : Fragment() {
 
     private fun chipClick() {
 
-        //не получается подсветить чипы после recreate()
         binding.chipGroup.setOnCheckedChangeListener { group, position ->
             val chip = group.findViewById<Chip>(position)
             val tag = chip.tag

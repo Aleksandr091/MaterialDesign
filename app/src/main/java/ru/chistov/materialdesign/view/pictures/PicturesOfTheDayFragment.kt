@@ -1,32 +1,21 @@
 package ru.chistov.materialdesign.view.pictures
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.constraintlayout.widget.Placeholder
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
-import ru.chistov.materialdesign.utils.ThemeBlueTheme
-import ru.chistov.materialdesign.utils.ThemeGreenTheme
-import ru.chistov.materialdesign.utils.ThemeMaterialDesign
-import ru.chistov.materialdesign.utils.ThemeRedTheme
-import ru.chistov.materialdesign.view.MainActivity
 import ru.chistov.materialdesign.view.settings.SettingsFragment
-import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayAppState
-import ru.chistov.materialdesign.viewmodel.PicturesOfTheDayViewModel
+import ru.chistov.materialdesign.viewmodel.PicturesOfTheDay.PicturesOfTheDayAppState
+import ru.chistov.materialdesign.viewmodel.PicturesOfTheDay.PicturesOfTheDayViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -62,7 +51,9 @@ class PicturesOfTheDayFragment : Fragment() {
         when (item.itemId) {
             R.id.app_bar_fav -> {}
             R.id.app_bar_settings -> {
-                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container,SettingsFragment.newInstance()).addToBackStack("").commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, SettingsFragment.newInstance()).addToBackStack("")
+                    .commit()
             }
             android.R.id.home -> {
                 BottomNavigationDrawerFragment.newInstance()
@@ -83,11 +74,9 @@ class PicturesOfTheDayFragment : Fragment() {
         viewModel.sendRequest(date)
         setClickListenerTextInputLayout()
         initBottomSheetBehavior()
-        initMenu()
-        fabListener()
+        //initMenu()
+        //fabListener()
         tabListener(date)
-
-
     }
 
     private fun tabListener(date: String) {
@@ -99,14 +88,18 @@ class PicturesOfTheDayFragment : Fragment() {
                 when (tab?.position) {
 
                     0 -> {
+                        binding.imageView.visibility = View.VISIBLE
+                        binding.videoOfTheDay.visibility = View.GONE
                         viewModel.sendRequest(date)
                     }
                     1 -> {
-
+                        binding.imageView.visibility = View.VISIBLE
+                        binding.videoOfTheDay.visibility = View.GONE
                         viewModel.sendRequest(dateYT)
                     }
                     2 -> {
-
+                        binding.imageView.visibility = View.VISIBLE
+                        binding.videoOfTheDay.visibility = View.GONE
                         viewModel.sendRequest(dateTDBY)
                     }
 
@@ -125,7 +118,7 @@ class PicturesOfTheDayFragment : Fragment() {
         })
     }
 
-    private fun fabListener() {
+    /*private fun fabListener() {
         binding.fab.setOnClickListener {
             if (isMain) {
                 binding.bottomAppBar.navigationIcon = null
@@ -153,7 +146,7 @@ class PicturesOfTheDayFragment : Fragment() {
             }
             isMain = !isMain
         }
-    }
+    }*/
 
     private fun initBottomSheetBehavior() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.lifeHack.bottomSheetContainer)
@@ -169,12 +162,10 @@ class PicturesOfTheDayFragment : Fragment() {
         }
     }
 
-    private fun initMenu() {
+    /*private fun initMenu() {
         (requireActivity() as MainActivity).setSupportActionBar(binding.bottomAppBar)
         setHasOptionsMenu(true)
-    }
-
-
+    }*/
 
 
     private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
@@ -194,14 +185,39 @@ class PicturesOfTheDayFragment : Fragment() {
                 }
             }
             is PicturesOfTheDayAppState.Success -> {
-                binding.imageView.load(picturesOfTheDayAppState.pictureOfTheDayResponseData.hdurl) { this.placeholder(R.drawable.progress_animation)
-                    crossfade(true)
-                    error(R.drawable.ic_vector_load_error)}
-                binding.lifeHack.title.text =
-                    picturesOfTheDayAppState.pictureOfTheDayResponseData.title
-                binding.lifeHack.explanation.text =
-                    picturesOfTheDayAppState.pictureOfTheDayResponseData.explanation
+                setData(picturesOfTheDayAppState)
             }
+        }
+    }
+
+    private fun setData(data: PicturesOfTheDayAppState.Success) {
+        val url = data.pictureOfTheDayResponseData.hdurl
+        if (url.isNullOrEmpty()) {
+            val videoUrl = data.pictureOfTheDayResponseData.url
+            videoUrl?.let { showAVideoUrl(it) }
+        } else {
+            binding.imageView.load(data.pictureOfTheDayResponseData.hdurl) {
+                this.placeholder(R.drawable.progress_animation)
+                crossfade(true)
+                error(R.drawable.ic_vector_load_error)
+            }
+            binding.lifeHack.title.text =
+                data.pictureOfTheDayResponseData.title
+            binding.lifeHack.explanation.text =
+                data.pictureOfTheDayResponseData.explanation
+        }
+    }
+
+    private fun showAVideoUrl(videoUrl: String) = with(binding) {
+        imageView.visibility = View.GONE
+        videoOfTheDay.visibility = View.VISIBLE
+        videoOfTheDay.text = "Сегодня у нас без картинки дня, но есть  видео дня! " +
+                "${videoUrl.toString()} \n кликни >ЗДЕСЬ< чтобы открыть в новом окне"
+        videoOfTheDay.setOnClickListener {
+            val i = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(videoUrl)
+            }
+            startActivity(i)
         }
     }
 

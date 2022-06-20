@@ -1,25 +1,18 @@
 package ru.chistov.materialdesign.view.navigation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import com.google.android.material.chip.Chip
-import com.google.android.material.tabs.TabLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import coil.load
+import com.google.android.material.snackbar.Snackbar
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentMarsBinding
-import ru.chistov.materialdesign.databinding.FragmentSettingsBinding
-import ru.chistov.materialdesign.databinding.FragmentSystemBinding
-import ru.chistov.materialdesign.utils.ThemeBlueTheme
-import ru.chistov.materialdesign.utils.ThemeGreenTheme
-import ru.chistov.materialdesign.utils.ThemeMaterialDesign
-import ru.chistov.materialdesign.utils.ThemeRedTheme
-import ru.chistov.materialdesign.view.MainActivity
+import ru.chistov.materialdesign.viewmodel.MarsPhotos.MarsPhotosAppState
+import ru.chistov.materialdesign.viewmodel.MarsPhotos.MarsPhotosViewModel
 
 
 class MarsFragment : Fragment() {
@@ -36,10 +29,46 @@ class MarsFragment : Fragment() {
         return binding.root
     }
 
+    private val viewModel: MarsPhotosViewModel by lazy {
+        ViewModelProvider(this).get(MarsPhotosViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer {
+            renderData(it)
+        })
+        viewModel.sendRequest()
+    }
+    private fun renderData(marsPhotosAppState: MarsPhotosAppState) {
+        when (marsPhotosAppState) {
+            is MarsPhotosAppState.Error -> {
+                Snackbar.make(
+                    requireContext(),
+                    binding.root,
+                    marsPhotosAppState.message.toString(),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+            is MarsPhotosAppState.Loading -> {
+                binding.appCompatImageView2.load(R.drawable.progress_animation) {
+                    error(R.drawable.ic_vector_load_error)
+                }
+            }
+            is MarsPhotosAppState.Success -> {
+                if(marsPhotosAppState.serverResponseData.photos.isEmpty()){
+                    Snackbar.make(binding.root, "В этот день curiosity не сделал ни одного снимка", Snackbar.LENGTH_SHORT).show()
+                }else{
+                    val url = marsPhotosAppState.serverResponseData.photos.first().imgSrc
+                    binding.appCompatImageView2.load(url){
+                        this.placeholder(R.drawable.progress_animation)
+                        crossfade(true)
+                        error(R.drawable.ic_vector_load_error)
+                    }
+                }
 
+            }
+        }
     }
 
 

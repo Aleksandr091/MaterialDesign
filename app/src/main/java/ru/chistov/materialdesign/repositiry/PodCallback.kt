@@ -1,6 +1,8 @@
 package ru.chistov.materialdesign.repositiry
 
-interface MyCallback {
+import ru.chistov.materialdesign.repositiry.dto.PictureOfTheDayResponseData
+
+interface PodCallback {
     fun onFailure(message:String)
     fun onResponse(picture: PictureOfTheDayResponseData)
 }

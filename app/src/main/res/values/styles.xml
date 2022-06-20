@@ -46,4 +46,18 @@
     </style>
 
 
+
+    <style name="MyBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="labelVisibilityMode">selected</item>
+        <item name="itemTextColor">?colorPrimary</item>
+        <item name="itemTextAppearanceActive">@style/TextStyleBNV</item>
+
+    </style>
+
+    <style name="TextStyleBNV" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/gost</item>
+    </style>
+
+
+
 </resources>

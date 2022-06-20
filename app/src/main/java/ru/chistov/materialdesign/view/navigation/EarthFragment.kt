@@ -1,25 +1,20 @@
 package ru.chistov.materialdesign.view.navigation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import com.google.android.material.chip.Chip
-import com.google.android.material.tabs.TabLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import coil.load
+import com.google.android.material.snackbar.Snackbar
+import ru.chistov.materialdesign.BuildConfig
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentEarthBinding
-import ru.chistov.materialdesign.databinding.FragmentSettingsBinding
-import ru.chistov.materialdesign.databinding.FragmentSystemBinding
-import ru.chistov.materialdesign.utils.ThemeBlueTheme
-import ru.chistov.materialdesign.utils.ThemeGreenTheme
-import ru.chistov.materialdesign.utils.ThemeMaterialDesign
-import ru.chistov.materialdesign.utils.ThemeRedTheme
-import ru.chistov.materialdesign.view.MainActivity
+import ru.chistov.materialdesign.viewmodel.EarthEpic.EarthEpicAppState
+import ru.chistov.materialdesign.viewmodel.EarthEpic.EarthEpicViewModel
+
 
 
 class EarthFragment : Fragment() {
@@ -36,12 +31,50 @@ class EarthFragment : Fragment() {
         return binding.root
     }
 
+    private val viewModel: EarthEpicViewModel by lazy {
+        ViewModelProvider(this).get(EarthEpicViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer {
+            renderData(it)
+        })
+        viewModel.sendRequest()
     }
 
+    private fun renderData(earthEpicAppState: EarthEpicAppState) {
+        when (earthEpicAppState) {
+            is EarthEpicAppState.Error -> {
+                Snackbar.make(
+                    requireContext(),
+                    binding.root,
+                    earthEpicAppState.message.toString(),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+            is EarthEpicAppState.Loading -> {
+                binding.appCompatImageView.load(R.drawable.progress_animation) {
+                    error(R.drawable.ic_vector_load_error)
+                }
+            }
+            is EarthEpicAppState.Success -> {
+                val strDate = earthEpicAppState.serverResponseData.last().date.split(" ").first()
+                val image =earthEpicAppState.serverResponseData.last().image
+                val url = "https://api.nasa.gov/EPIC/archive/natural/" +
+                        strDate.replace("-","/",true) +
+                        "/png/" +
+                        "$image" +
+                        ".png?api_key=${BuildConfig.NASA_API_KEY}"
+                binding.appCompatImageView.load(url) {
+                    this.placeholder(R.drawable.progress_animation)
+                    crossfade(true)
+                    error(R.drawable.ic_vector_load_error)
+                }
+
+            }
+        }
+    }
 
 
     override fun onDestroy() {
@@ -54,8 +87,6 @@ class EarthFragment : Fragment() {
         @JvmStatic
         fun newInstance() = EarthFragment()
     }
-
-    
 
 
 }

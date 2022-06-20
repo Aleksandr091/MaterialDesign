@@ -1,15 +1,13 @@
 package ru.chistov.materialdesign.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.utils.ThemeBlueTheme
 import ru.chistov.materialdesign.utils.ThemeGreenTheme
 import ru.chistov.materialdesign.utils.ThemeMaterialDesign
 import ru.chistov.materialdesign.utils.ThemeRedTheme
-import ru.chistov.materialdesign.view.navigation.viewpager.ApiFragment
-import ru.chistov.materialdesign.view.pictures.PicturesOfTheDayFragment
-import ru.chistov.materialdesign.view.settings.SettingsFragment
+import ru.chistov.materialdesign.view.navigation.viewpager.ApiBottomFragment
 
 class MainActivity : AppCompatActivity() {
     private val KEY_SP = "sp"
@@ -19,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setTheme(getRealStyle(getCurrentTheme()))
         setContentView(R.layout.activity_main)
         if (savedInstanceState==null){
-            supportFragmentManager.beginTransaction().replace(R.id.container,ApiFragment.newInstance()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.container, ApiBottomFragment.newInstance()).commit()
         }
     }
     fun getCurrentTheme(): Int {
