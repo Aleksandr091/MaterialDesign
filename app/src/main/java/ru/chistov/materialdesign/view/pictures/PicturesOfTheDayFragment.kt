@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import ru.chistov.materialdesign.R
@@ -73,7 +72,7 @@ class PicturesOfTheDayFragment : Fragment() {
         val date = dateFormatted.format(Calendar.getInstance().time)
         viewModel.sendRequest(date)
         setClickListenerTextInputLayout()
-        initBottomSheetBehavior()
+        //initBottomSheetBehavior()
         //initMenu()
         //fabListener()
         tabListener(date)
@@ -148,10 +147,10 @@ class PicturesOfTheDayFragment : Fragment() {
         }
     }*/
 
-    private fun initBottomSheetBehavior() {
+    /*private fun initBottomSheetBehavior() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.lifeHack.bottomSheetContainer)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-    }
+    }*/
 
     private fun setClickListenerTextInputLayout() {
         binding.inputLayout.setEndIconOnClickListener {
@@ -190,6 +189,7 @@ class PicturesOfTheDayFragment : Fragment() {
         }
     }
 
+
     private fun setData(data: PicturesOfTheDayAppState.Success) {
         val url = data.pictureOfTheDayResponseData.hdurl
         if (url.isNullOrEmpty()) {
@@ -201,9 +201,9 @@ class PicturesOfTheDayFragment : Fragment() {
                 crossfade(true)
                 error(R.drawable.ic_vector_load_error)
             }
-            binding.lifeHack.title.text =
+            binding.title.text =
                 data.pictureOfTheDayResponseData.title
-            binding.lifeHack.explanation.text =
+            binding.explanation.text =
                 data.pictureOfTheDayResponseData.explanation
         }
     }
