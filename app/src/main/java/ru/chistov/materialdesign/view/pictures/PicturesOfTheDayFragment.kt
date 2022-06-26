@@ -92,12 +92,15 @@ class PicturesOfTheDayFragment : Fragment() {
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.constraintLayout)
             val transitionFade = Fade().apply { duration = 1500 }
-            val transitionChangeBounds = ChangeBounds().apply { duration = 1000 }
+            val transitionChangeBounds = ChangeBounds().apply { duration = 1500 }
             val transitionSet = TransitionSet()
             transitionSet.addTransition(transitionFade)
             transitionSet.addTransition(transitionChangeBounds)
-            transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(7f)
+            transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(1f)
             TransitionManager.beginDelayedTransition(binding.constraintLayout, transitionSet)
+            TransitionManager.beginDelayedTransition(binding.nestedScrollView, transitionSet)//не работает
+
+
 
             isClick = !isClick
             if (isClick) {
