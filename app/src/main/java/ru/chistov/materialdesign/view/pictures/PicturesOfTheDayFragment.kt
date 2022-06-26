@@ -4,14 +4,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.view.animation.AnticipateOvershootInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.transition.*
 import coil.load
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentPicturesOfTheDayBinding
+
+
 import ru.chistov.materialdesign.view.settings.SettingsFragment
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDay.PicturesOfTheDayAppState
 import ru.chistov.materialdesign.viewmodel.PicturesOfTheDay.PicturesOfTheDayViewModel
@@ -22,6 +29,8 @@ import java.util.*
 class PicturesOfTheDayFragment : Fragment() {
 
     var isMain = true
+    var isOpen = false
+    var isClick = false
     private val dateFormatted = SimpleDateFormat("yyyy-MM-dd")
 
 
@@ -72,10 +81,41 @@ class PicturesOfTheDayFragment : Fragment() {
         val date = dateFormatted.format(Calendar.getInstance().time)
         viewModel.sendRequest(date)
         setClickListenerTextInputLayout()
-        //initBottomSheetBehavior()
-        //initMenu()
-        //fabListener()
+
         tabListener(date)
+        binding.imageW.setOnClickListener {
+
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayout)
+            val transitionFade = Fade().apply { duration = 1500 }
+            val transitionChangeBounds = ChangeBounds().apply { duration = 1000 }
+            val transitionSet = TransitionSet()
+            transitionSet.addTransition(transitionFade)
+            transitionSet.addTransition(transitionChangeBounds)
+            transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(7f)
+            TransitionManager.beginDelayedTransition(binding.constraintLayout,transitionSet )
+
+            isClick = !isClick
+            if(isClick){
+                constraintSet.connect(R.id.tabLayout,ConstraintSet.TOP,R.id.inputLayout,ConstraintSet.BOTTOM)
+
+            }
+            constraintSet.applyTo(binding.constraintLayout)
+            binding.inputLayout.visibility =
+                if (isClick){
+                    View.VISIBLE
+                }else{
+                    View.GONE
+                }
+            binding.imageW.visibility =
+                if (isClick){
+                    View.GONE
+                }else{
+                    View.VISIBLE
+                }
+
+
+        }
     }
 
     private fun tabListener(date: String) {
@@ -117,118 +157,104 @@ class PicturesOfTheDayFragment : Fragment() {
         })
     }
 
-/*private fun fabListener() {
-    binding.fab.setOnClickListener {
-        if (isMain) {
-            binding.bottomAppBar.navigationIcon = null
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.fab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_back_fab
-                )
-            )
-            binding.bottomAppBar.replaceMenu(R.menu.menu_about)
-        } else {
-            binding.bottomAppBar.navigationIcon = ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_hamburger_menu_bottom_bar
-            )
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.fab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_plus_fab
-                )
-            )
-            binding.bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+
+
+    private fun setClickListenerTextInputLayout() {
+        binding.inputLayout.setEndIconOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW).apply {
+                data =
+                    Uri.parse("https://en.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
+            })
         }
-        isMain = !isMain
     }
-}*/
-
-/*private fun initBottomSheetBehavior() {
-    val bottomSheetBehavior = BottomSheetBehavior.from(binding.lifeHack.bottomSheetContainer)
-    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-}*/
-
-private fun setClickListenerTextInputLayout() {
-    binding.inputLayout.setEndIconOnClickListener {
-        startActivity(Intent(Intent.ACTION_VIEW).apply {
-            data =
-                Uri.parse("https://en.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
-        })
-    }
-}
-
-/*private fun initMenu() {
-    (requireActivity() as MainActivity).setSupportActionBar(binding.bottomAppBar)
-    setHasOptionsMenu(true)
-}*/
 
 
-private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
-    when (picturesOfTheDayAppState) {
-        is PicturesOfTheDayAppState.Error -> {
-            Snackbar.make(
-                requireContext(),
-                binding.root,
-                picturesOfTheDayAppState.message,
-                Snackbar.LENGTH_LONG
-            ).show()
 
-        }
-        is PicturesOfTheDayAppState.Loading -> {
-            binding.imageView.load(R.drawable.progress_animation) {
-                error(R.drawable.ic_vector_load_error)
+    private fun renderData(picturesOfTheDayAppState: PicturesOfTheDayAppState) {
+        when (picturesOfTheDayAppState) {
+            is PicturesOfTheDayAppState.Error -> {
+                Snackbar.make(
+                    requireContext(),
+                    binding.root,
+                    picturesOfTheDayAppState.message,
+                    Snackbar.LENGTH_LONG
+                ).show()
+
+            }
+            is PicturesOfTheDayAppState.Loading -> {
+                binding.imageView.load(R.drawable.progress_animation) {
+                    error(R.drawable.ic_vector_load_error)
+                }
+            }
+            is PicturesOfTheDayAppState.Success -> {
+                setData(picturesOfTheDayAppState)
+                binding.imageView.setOnClickListener {
+                    isOpen = !isOpen
+                    val transitionCB = ChangeBounds()
+                    val transitionImage = ChangeImageTransform()
+                    val transitionSet = TransitionSet().apply {
+                        addTransition(transitionCB)
+                        addTransition(transitionImage)}
+                    TransitionManager.beginDelayedTransition(binding.root, transitionSet)
+                    binding.imageView.scaleType =
+                        if (isOpen) {
+                            ImageView.ScaleType.CENTER_CROP
+                        } else {
+                            ImageView.ScaleType.CENTER_INSIDE
+                        }
+
+                    val params = (binding.imageView.layoutParams as FrameLayout.LayoutParams)
+                    params.height = if (isOpen) {
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    } else {
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                    }
+                    binding.imageView.layoutParams = params
+                }
             }
         }
-        is PicturesOfTheDayAppState.Success -> {
-            setData(picturesOfTheDayAppState)
+    }
+
+
+    private fun setData(data: PicturesOfTheDayAppState.Success) {
+        val url = data.pictureOfTheDayResponseData.hdurl
+        if (url.isNullOrEmpty()) {
+            val videoUrl = data.pictureOfTheDayResponseData.url
+            videoUrl?.let { showAVideoUrl(it) }
+        } else {
+            binding.imageView.load(data.pictureOfTheDayResponseData.url) {
+                this.placeholder(R.drawable.progress_animation)
+                crossfade(true)
+                error(R.drawable.ic_vector_load_error)
+            }
+            binding.title.text =
+                data.pictureOfTheDayResponseData.title
+            binding.explanation.text =
+                data.pictureOfTheDayResponseData.explanation
         }
     }
-}
 
-
-private fun setData(data: PicturesOfTheDayAppState.Success) {
-    val url = data.pictureOfTheDayResponseData.hdurl
-    if (url.isNullOrEmpty()) {
-        val videoUrl = data.pictureOfTheDayResponseData.url
-        videoUrl?.let { showAVideoUrl(it) }
-    } else {
-        binding.imageView.load(data.pictureOfTheDayResponseData.hdurl) {
-            this.placeholder(R.drawable.progress_animation)
-            crossfade(true)
-            error(R.drawable.ic_vector_load_error)
+    private fun showAVideoUrl(videoUrl: String) = with(binding) {
+        imageView.visibility = View.GONE
+        videoOfTheDay.visibility = View.VISIBLE
+        videoOfTheDay.text = "Сегодня у нас без картинки дня, но есть  видео дня! " +
+                "${videoUrl.toString()} \n кликни >ЗДЕСЬ< чтобы открыть в новом окне"
+        videoOfTheDay.setOnClickListener {
+            val i = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(videoUrl)
+            }
+            startActivity(i)
         }
-        binding.title.text =
-            data.pictureOfTheDayResponseData.title
-        binding.explanation.text =
-            data.pictureOfTheDayResponseData.explanation
     }
-}
 
-private fun showAVideoUrl(videoUrl: String) = with(binding) {
-    imageView.visibility = View.GONE
-    videoOfTheDay.visibility = View.VISIBLE
-    videoOfTheDay.text = "Сегодня у нас без картинки дня, но есть  видео дня! " +
-            "${videoUrl.toString()} \n кликни >ЗДЕСЬ< чтобы открыть в новом окне"
-    videoOfTheDay.setOnClickListener {
-        val i = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(videoUrl)
-        }
-        startActivity(i)
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
-}
 
-override fun onDestroy() {
-    _binding = null
-    super.onDestroy()
-}
+    companion object {
 
-companion object {
-
-    @JvmStatic
-    fun newInstance() = PicturesOfTheDayFragment()
-}
+        @JvmStatic
+        fun newInstance() = PicturesOfTheDayFragment()
+    }
 }

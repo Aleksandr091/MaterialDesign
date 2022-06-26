@@ -58,7 +58,7 @@
                     android:contentDescription="@string/photo_of_the_day_stub"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_wikipedia"
-                    android:visibility="invisible"/>
+                    android:visibility="gone"/>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
@@ -88,16 +88,21 @@
 
                 </com.google.android.material.tabs.TabLayout>
 
-                <ru.chistov.materialdesign.utils.EquilateralImageView
-                    android:id="@+id/imageView"
+                <FrameLayout
+                    android:id="@+id/frameLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/photo_of_the_day_stub"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tabLayout"
-                    app:srcCompat="@drawable/ic_no_photo_vector" />
+                    app:srcCompat="@drawable/ic_no_photo_vector">
+                    <ru.chistov.materialdesign.utils.EquilateralImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/photo_of_the_day_stub" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/videoOfTheDay"
