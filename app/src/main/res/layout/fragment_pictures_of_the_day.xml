@@ -180,11 +180,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/title"
                         tools:text="This lovely starfield spans some four full moons." />
                 </LinearLayout>
-
-
             </androidx.cardview.widget.CardView>
-
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
