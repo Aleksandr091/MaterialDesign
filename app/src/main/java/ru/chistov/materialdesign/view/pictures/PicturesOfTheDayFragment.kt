@@ -83,6 +83,10 @@ class PicturesOfTheDayFragment : Fragment() {
         setClickListenerTextInputLayout()
 
         tabListener(date)
+        wListener()
+    }
+
+    private fun wListener() {
         binding.imageW.setOnClickListener {
 
             val constraintSet = ConstraintSet()
@@ -93,24 +97,29 @@ class PicturesOfTheDayFragment : Fragment() {
             transitionSet.addTransition(transitionFade)
             transitionSet.addTransition(transitionChangeBounds)
             transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(7f)
-            TransitionManager.beginDelayedTransition(binding.constraintLayout,transitionSet )
+            TransitionManager.beginDelayedTransition(binding.constraintLayout, transitionSet)
 
             isClick = !isClick
-            if(isClick){
-                constraintSet.connect(R.id.tabLayout,ConstraintSet.TOP,R.id.inputLayout,ConstraintSet.BOTTOM)
+            if (isClick) {
+                constraintSet.connect(
+                    R.id.tabLayout,
+                    ConstraintSet.TOP,
+                    R.id.inputLayout,
+                    ConstraintSet.BOTTOM
+                )
 
             }
             constraintSet.applyTo(binding.constraintLayout)
             binding.inputLayout.visibility =
-                if (isClick){
+                if (isClick) {
                     View.VISIBLE
-                }else{
+                } else {
                     View.GONE
                 }
             binding.imageW.visibility =
-                if (isClick){
+                if (isClick) {
                     View.GONE
-                }else{
+                } else {
                     View.VISIBLE
                 }
 
@@ -188,30 +197,35 @@ class PicturesOfTheDayFragment : Fragment() {
             }
             is PicturesOfTheDayAppState.Success -> {
                 setData(picturesOfTheDayAppState)
-                binding.imageView.setOnClickListener {
-                    isOpen = !isOpen
-                    val transitionCB = ChangeBounds()
-                    val transitionImage = ChangeImageTransform()
-                    val transitionSet = TransitionSet().apply {
-                        addTransition(transitionCB)
-                        addTransition(transitionImage)}
-                    TransitionManager.beginDelayedTransition(binding.root, transitionSet)
-                    binding.imageView.scaleType =
-                        if (isOpen) {
-                            ImageView.ScaleType.CENTER_CROP
-                        } else {
-                            ImageView.ScaleType.CENTER_INSIDE
-                        }
-
-                    val params = (binding.imageView.layoutParams as FrameLayout.LayoutParams)
-                    params.height = if (isOpen) {
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    } else {
-                        FrameLayout.LayoutParams.WRAP_CONTENT
-                    }
-                    binding.imageView.layoutParams = params
-                }
+                imageScaleTypeListener()
             }
+        }
+    }
+
+    private fun imageScaleTypeListener() {
+        binding.imageView.setOnClickListener {
+            isOpen = !isOpen
+            val transitionCB = ChangeBounds()
+            val transitionImage = ChangeImageTransform()
+            val transitionSet = TransitionSet().apply {
+                addTransition(transitionCB)
+                addTransition(transitionImage)
+            }
+            TransitionManager.beginDelayedTransition(binding.root, transitionSet)
+            binding.imageView.scaleType =
+                if (isOpen) {
+                    ImageView.ScaleType.CENTER_CROP
+                } else {
+                    ImageView.ScaleType.CENTER_INSIDE
+                }
+
+            val params = (binding.imageView.layoutParams as FrameLayout.LayoutParams)
+            params.height = if (isOpen) {
+                FrameLayout.LayoutParams.MATCH_PARENT
+            } else {
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            }
+            binding.imageView.layoutParams = params
         }
     }
 
