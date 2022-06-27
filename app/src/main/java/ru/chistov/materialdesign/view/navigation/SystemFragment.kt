@@ -34,9 +34,9 @@ class SystemFragment : Fragment() {
             if (flag) {
                 ObjectAnimator.ofFloat(binding.fab, View.ROTATION, 0f, 405f)
                     .setDuration(duration).start()
-                ObjectAnimator.ofFloat(binding.optionOneContainer, View.TRANSLATION_Y, -50f, -370f)
+                ObjectAnimator.ofFloat(binding.optionOneContainer, View.TRANSLATION_Y, -50f, -250f)
                     .setDuration(duration).start()
-                ObjectAnimator.ofFloat(binding.optionTwoContainer, View.TRANSLATION_Y, -20f, -270f)
+                ObjectAnimator.ofFloat(binding.optionTwoContainer, View.TRANSLATION_Y, -20f, -150f)
                     .setDuration(duration).start()
 
                 binding.optionOneContainer.animate()
@@ -64,9 +64,9 @@ class SystemFragment : Fragment() {
             } else {
                 ObjectAnimator.ofFloat(binding.fab, View.ROTATION, 405f, 0f)
                     .setDuration(duration).start()
-                ObjectAnimator.ofFloat(binding.optionOneContainer, View.TRANSLATION_Y, -370f, -50f)
+                ObjectAnimator.ofFloat(binding.optionOneContainer, View.TRANSLATION_Y, -250f, -50f)
                     .setDuration(duration).start()
-                ObjectAnimator.ofFloat(binding.optionTwoContainer, View.TRANSLATION_Y, -270f, -20f)
+                ObjectAnimator.ofFloat(binding.optionTwoContainer, View.TRANSLATION_Y, -150f, -20f)
                     .setDuration(duration).start()
 
                 binding.optionOneContainer.animate()

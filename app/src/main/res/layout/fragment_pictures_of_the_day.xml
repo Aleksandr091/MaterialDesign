@@ -7,7 +7,7 @@
     android:id="@+id/coordinatorLayout">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:hint="@string/search_wiki"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     app:counterEnabled="true"
                     app:counterMaxLength="20"
                     app:endIconContentDescription="content_description_end_icon"

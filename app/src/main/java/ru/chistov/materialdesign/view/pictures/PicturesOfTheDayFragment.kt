@@ -1,5 +1,6 @@
 package ru.chistov.materialdesign.view.pictures
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -96,11 +97,9 @@ class PicturesOfTheDayFragment : Fragment() {
             val transitionSet = TransitionSet()
             transitionSet.addTransition(transitionFade)
             transitionSet.addTransition(transitionChangeBounds)
-            transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(1f)
+            transitionChangeBounds.interpolator = AnticipateOvershootInterpolator(2f)
             TransitionManager.beginDelayedTransition(binding.constraintLayout, transitionSet)
-            TransitionManager.beginDelayedTransition(binding.nestedScrollView, transitionSet)//не работает
-
-
+            //TransitionManager.beginDelayedTransition(binding.nestedScrollView, transitionChangeBounds)//не работает
 
             isClick = !isClick
             if (isClick) {
@@ -110,9 +109,15 @@ class PicturesOfTheDayFragment : Fragment() {
                     R.id.inputLayout,
                     ConstraintSet.BOTTOM
                 )
-
+                //binding.nestedScrollView.translationY = binding.appBar.height.toFloat() + binding.inputLayout.height.toFloat() - binding.imageW.height.toFloat() //не работает
+                ObjectAnimator.ofFloat(binding.nestedScrollView, View.TRANSLATION_Y, binding.appBar.height.toFloat() + binding.inputLayout.height-binding.imageW.height).apply {
+                    duration = 1500
+                    interpolator = AnticipateOvershootInterpolator(2f)
+                }.start()
             }
             constraintSet.applyTo(binding.constraintLayout)
+
+
             binding.inputLayout.visibility =
                 if (isClick) {
                     View.VISIBLE
