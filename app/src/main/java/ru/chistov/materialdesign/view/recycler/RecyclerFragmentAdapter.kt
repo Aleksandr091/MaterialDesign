@@ -57,11 +57,11 @@ class RecyclerFragmentAdapter(
             TYPE_HEADER -> {
                 val view =
                     FragmentRecyclerItemHeaderBinding.inflate(LayoutInflater.from(parent.context))
-                MarsViewHolder(view.root)
+                HeaderViewHolder(view.root)
             }
             else -> {
                 val view =
-                    FragmentRecyclerItemMarsBinding.inflate(LayoutInflater.from(parent.context))
+                    FragmentRecyclerItemHeaderBinding.inflate(LayoutInflater.from(parent.context))
                 HeaderViewHolder(view.root)
             }
         }
@@ -69,15 +69,15 @@ class RecyclerFragmentAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        when (getItemViewType(position)) { // TODO WH создать BaseViewHolder
+        /*when (getItemViewType(position)) { // TODO WH создать BaseViewHolder
             TYPE_EARTH -> {
                 holder.bind(list[position])
             }
             TYPE_MARS -> {
                 holder.bind(list[position])
             }
-        }
-        //holder.bind(list[position])
+        }*/
+        holder.bind(list[position])
     }
 
     override fun onBindViewHolder(
