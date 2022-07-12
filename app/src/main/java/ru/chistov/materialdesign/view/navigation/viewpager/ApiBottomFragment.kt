@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import ru.chistov.materialdesign.R
 import ru.chistov.materialdesign.databinding.FragmentApiBottomBinding
 import ru.chistov.materialdesign.view.pictures.PicturesOfTheDayFragment
+import ru.chistov.materialdesign.view.recycler.RecyclerFragment
 import ru.chistov.materialdesign.view.settings.SettingsFragment
 
 class ApiBottomFragment : Fragment() {
@@ -42,6 +43,11 @@ class ApiBottomFragment : Fragment() {
                R.id.action_bottom_navigation_settings -> {
                    requireActivity().supportFragmentManager.beginTransaction()
                        .replace(R.id.container_bottom, SettingsFragment.newInstance()).commit()
+                   true
+               }
+               R.id.action_bottom_recycle_view -> {
+                   requireActivity().supportFragmentManager.beginTransaction()
+                       .replace(R.id.container_bottom, RecyclerFragment.newInstance()).commit()
                    true
                }
                else -> {

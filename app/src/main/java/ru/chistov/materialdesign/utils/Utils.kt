@@ -12,3 +12,6 @@ const val EARTH_FRAGMENT = 0
 const val SYSTEM_FRAGMENT = 1
 const val MARS_FRAGMENT = 2
 const val UNKNOWN_ERROR = "Unidentified error"
+const val TYPE_EARTH = 1
+const val TYPE_MARS = 2
+const val TYPE_HEADER = 3

@@ -13,4 +13,8 @@
         android:id="@+id/action_bottom_navigation_settings"
         android:icon="@drawable/ic_settings_menu"
         android:title="@string/Settings" />
+    <item
+        android:id="@+id/action_bottom_recycle_view"
+        android:icon="@drawable/ic_recycle"
+        android:title="@string/recycle_view" />
 </menu>
