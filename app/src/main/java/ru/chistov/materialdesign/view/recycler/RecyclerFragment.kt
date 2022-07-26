@@ -19,7 +19,7 @@ class RecyclerFragment : Fragment(), OnListItemClickListener {
         get() = _binding!!
     private var isNewList = false
     val list = arrayListOf(
-        Pair(Data(0,"HEADER", "", TYPE_HEADER), false),
+        Pair(Data(0,"HEADER", "", TYPE_HEADER,1000000000), false),
         Pair(Data(1,"Earth", "Earth des", TYPE_EARTH), false),
         Pair(Data(2,"Earth", "Earth des", TYPE_EARTH), false),
         Pair(Data(3,"Mars", "Mars des", TYPE_MARS), false),

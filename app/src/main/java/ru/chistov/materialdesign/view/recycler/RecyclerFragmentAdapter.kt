@@ -1,6 +1,7 @@
 package ru.chistov.materialdesign.view.recycler
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -113,14 +114,20 @@ class RecyclerFragmentAdapter(
         return list.size
     }
 
-    class EarthViewHolder(view: View) : BaseViewHolder(view) { // TODO WH :BaseViewHolder
+    inner class EarthViewHolder(view: View) : BaseViewHolder(view) { // TODO WH :BaseViewHolder
 
 
         override fun bind(listItem: Pair<Data, Boolean>) {
             (FragmentRecyclerItemEarthBinding.bind(itemView)).apply {
                 title.text = listItem.first.someText
                 descriptionTextView.text = listItem.first.someDescription
+                favourite.setOnClickListener {
+                    list[layoutPosition].first.weight+=100
+                    list.sortByDescending { it.first.weight }
+                    notifyItemChanged(layoutPosition)
+                }
             }
+
         }
     }
 
@@ -171,6 +178,11 @@ class RecyclerFragmentAdapter(
                     }
                     marsDescriptionTextView.visibility =
                         if (list[layoutPosition].second) View.VISIBLE else View.GONE
+                }
+                favourite.setOnClickListener {
+                    list[layoutPosition].first.weight+=100
+                    list.sortByDescending { it.first.weight }
+                    notifyItemChanged(layoutPosition)
                 }
             }
         }

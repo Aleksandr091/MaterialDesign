@@ -12,6 +12,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bg_earth" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wikiImageView"
+        app:srcCompat="@drawable/ic_favourite_menu" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
