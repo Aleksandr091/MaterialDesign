@@ -19,7 +19,8 @@ import ru.chistov.materialdesign.utils.TYPE_MARS
 
 class RecyclerFragmentAdapter(
     private var list: MutableList<Pair<Data, Boolean>>,
-    private var onListItemClickListener: OnListItemClickListener
+    private var onListItemClickListener: OnListItemClickListener,
+    private var onListItemFavouriteClickListener: OnListItemFavouriteClickListener
 ) : RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
 
 
@@ -122,12 +123,12 @@ class RecyclerFragmentAdapter(
                 title.text = listItem.first.someText
                 descriptionTextView.text = listItem.first.someDescription
                 favourite.setOnClickListener {
-                    list[layoutPosition].first.weight+=100
+                   /* list[layoutPosition].first.weight+=100
                     list.sortByDescending { it.first.weight }
-                    notifyItemChanged(layoutPosition)
+                    notifyItemChanged(layoutPosition)*/
+                    onListItemFavouriteClickListener.onItemClick(layoutPosition)
                 }
             }
-
         }
     }
 
@@ -180,9 +181,12 @@ class RecyclerFragmentAdapter(
                         if (list[layoutPosition].second) View.VISIBLE else View.GONE
                 }
                 favourite.setOnClickListener {
-                    list[layoutPosition].first.weight+=100
+                    /*list[layoutPosition].first.weight+=100
                     list.sortByDescending { it.first.weight }
-                    notifyItemChanged(layoutPosition)
+                    notifyItemChanged(layoutPosition)*/
+                    onListItemFavouriteClickListener.onItemClick(layoutPosition)
+
+
                 }
             }
         }
